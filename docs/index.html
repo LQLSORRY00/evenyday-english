@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>每日英语 - Daily English</title>
+    <link rel="stylesheet" href="styles.css">
+    <link rel="manifest" href="manifest.json">
+    <meta name="theme-color" content="#4CAF50">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="每日英语">
+    <link rel="icon" type="image/svg+xml" href="icon.svg">
+</head>
+<body>
+    <div id="app">
+        <!-- 头部导航 -->
+        <header class="header">
+            <div class="header-content">
+                <h1 class="logo">📚 每日英语</h1>
+                <div class="user-info">
+                    <span id="userName">学习者</span>
+                    <span class="level-badge" id="userLevel">Lv.1</span>
+                </div>
+            </div>
+        </header>
+
+        <!-- 侧边导航 -->
+        <nav class="sidebar">
+            <ul class="nav-menu">
+                <li class="nav-item active" data-page="home">
+                    <span class="nav-icon">🏠</span>
+                    <span class="nav-text">首页</span>
+                </li>
+                <li class="nav-item" data-page="vocabulary">
+                    <span class="nav-icon">📖</span>
+                    <span class="nav-text">词汇</span>
+                </li>
+                <li class="nav-item" data-page="listening">
+                    <span class="nav-icon">🎧</span>
+                    <span class="nav-text">听力</span>
+                </li>
+                <li class="nav-item" data-page="reading">
+                    <span class="nav-icon">📰</span>
+                    <span class="nav-text">阅读</span>
+                </li>
+                <li class="nav-item" data-page="speaking">
+                    <span class="nav-icon">🎤</span>
+                    <span class="nav-text">口语</span>
+                </li>
+                <li class="nav-item" data-page="grammar">
+                    <span class="nav-icon">📝</span>
+                    <span class="nav-text">语法</span>
+                </li>
+                <li class="nav-item" data-page="review">
+                    <span class="nav-icon">🔄</span>
+                    <span class="nav-text">复习</span>
+                </li>
+                <li class="nav-item" data-page="stats">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-text">统计</span>
+                </li>
+            </ul>
+        </nav>
+
+        <!-- 主内容区域 -->
+        <main class="main-content">
+            <!-- 首页 -->
+            <section id="home-page" class="page active">
+                <div class="welcome-banner">
+                    <h2>欢迎回来！</h2>
+                    <p>从零开始，每天进步一点点 🌟</p>
+                    <p style="font-size: 0.95rem; margin-top: 0.5rem; opacity: 0.9;">💡 学习建议：每天15-20分钟，从最基础的词汇和听力开始</p>
+                </div>
+
+                <div class="today-stats">
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayWords">0</div>
+                        <div class="stat-label">今日词汇</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="todayTime">0</div>
+                        <div class="stat-label">学习时长(分钟)</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-number" id="streakDays">0</div>
+                        <div class="stat-label">连续学习(天)</div>
+                    </div>
+                </div>
+
+                <div class="quick-actions">
+                    <h3>快速开始</h3>
+                    <div class="action-buttons">
+                        <button class="action-btn" onclick="navigateTo('vocabulary')">
+                            <span class="btn-icon">📖</span>
+                            <span class="btn-text">学习新词</span>
+                        </button>
+                        <button class="action-btn" onclick="navigateTo('listening')">
+                            <span class="btn-icon">🎧</span>
+                            <span class="btn-text">听力练习</span>
+                        </button>
+                        <button class="action-btn" onclick="navigateTo('grammar')">
+                            <span class="btn-icon">📝</span>
+                            <span class="btn-text">语法基础</span>
+                        </button>
+                        <button class="action-btn" onclick="navigateTo('speaking')">
+                            <span class="btn-icon">🎤</span>
+                            <span class="btn-text">口语练习</span>
+                        </button>
+                    </div>
+                </div>
+
+                <div class="progress-section">
+                    <h3>今日进度</h3>
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="dailyProgress" style="width: 0%"></div>
+                    </div>
+                    <p class="progress-text" id="progressText">完成度: 0%</p>
+                </div>
+            </section>
+
+            <!-- 词汇页面 -->
+            <section id="vocabulary-page" class="page">
+                <div class="page-header">
+                    <h2>📖 每日词汇</h2>
+                    <button class="btn btn-primary" onclick="loadNewWords()">加载新词</button>
+                </div>
+                
+                <div id="vocabulary-list" class="vocabulary-list">
+                    <!-- 词汇卡片将通过JS动态生成 -->
+                </div>
+            </section>
+
+            <!-- 听力页面 -->
+            <section id="listening-page" class="page">
+                <div class="page-header">
+                    <h2>🎧 听力训练</h2>
+                    <select id="listening-level" class="level-select" onchange="loadListeningContent()">
+                        <option value="zero">零基础（推荐）</option>
+                        <option value="beginner">初级</option>
+                        <option value="easy">简单</option>
+                        <option value="intermediate">中级</option>
+                    </select>
+                </div>
+
+                <div class="listening-player">
+                    <div class="player-controls">
+                        <button class="control-btn" onclick="changeSpeed(-0.1)">🐢 减慢</button>
+                        <button class="control-btn" onclick="togglePlay()" id="playBtn">▶️ 播放</button>
+                        <button class="control-btn" onclick="changeSpeed(0.1)">🐰 加快</button>
+                        <span class="speed-display" id="speedDisplay">0.6x</span>
+                    </div>
+                    <div class="audio-tips" id="audioTips">
+                        <p>💡 建议：第一遍用0.5x速度，第二遍用0.7x速度</p>
+                    </div>
+                    <div class="audio-text" id="audioText">
+                        <p>点击播放按钮开始听力练习</p>
+                    </div>
+                    <div class="subtitle-controls">
+                        <label>
+                            <input type="checkbox" id="showChinese" onchange="toggleSubtitle('chinese')">
+                            显示中文字幕
+                        </label>
+                        <label>
+                            <input type="checkbox" id="showEnglish" checked onchange="toggleSubtitle('english')">
+                            显示英文字幕
+                        </label>
+                    </div>
+                </div>
+
+                <div class="listening-exercises">
+                    <h3>听写练习</h3>
+                    <textarea id="dictationInput" class="dictation-input" 
+                        placeholder="听到的内容输入这里..."></textarea>
+                    <button class="btn btn-secondary" onclick="checkDictation()">检查答案</button>
+                    <div id="dictationResult" class="result-feedback"></div>
+                </div>
+            </section>
+
+            <!-- 阅读页面 -->
+            <section id="reading-page" class="page">
+                <div class="page-header">
+                    <h2>📰 阅读理解</h2>
+                    <button class="btn btn-primary" onclick="loadNewArticle()">加载新文章</button>
+                </div>
+
+                <div class="article-container">
+                    <h3 class="article-title" id="articleTitle">每日英语文章</h3>
+                    <div class="article-actions">
+                        <button class="tool-btn" id="playArticleBtn" onclick="toggleArticlePlay()">🔊 播放原文</button>
+                        <button class="tool-btn" id="pauseArticleBtn" onclick="pauseArticle()" disabled>⏸️ 暂停</button>
+                    </div>
+                    <div class="article-content" id="articleContent">
+                        <p>点击"加载新文章"开始阅读</p>
+                    </div>
+                </div>
+
+                <div class="reading-tools">
+                    <button class="tool-btn" onclick="toggleDictionary()">📖 字典模式</button>
+                    <button class="tool-btn" onclick="showQuiz()">❓ 阅读测试</button>
+                </div>
+
+                <div id="reading-quiz" class="quiz-container hidden">
+                    <h3>阅读理解测试</h3>
+                    <div id="quiz-questions"></div>
+                    <button class="btn btn-primary" onclick="submitQuiz()">提交答案</button>
+                    <div id="quiz-result" class="result-feedback"></div>
+                </div>
+            </section>
+
+            <!-- 口语页面 -->
+            <section id="speaking-page" class="page">
+                <div class="page-header">
+                    <h2>🎤 口语练习</h2>
+                    <div class="speaking-tips">
+                        <p>💡 <strong>学习提示：</strong>点击播放按钮听标准发音，然后点击录音按钮跟读。建议多听几次再录音。</p>
+                    </div>
+                </div>
+
+                <div class="speaking-modes">
+                    <button class="mode-btn active" onclick="switchSpeakingMode('repeat')">跟读练习</button>
+                    <button class="mode-btn" onclick="switchSpeakingMode('conversation')">对话练习</button>
+                    <button class="mode-btn" onclick="switchSpeakingMode('description')">描述练习</button>
+                </div>
+
+                <div id="repeat-mode" class="speaking-content active">
+                    <div class="sentence-card">
+                        <h4>跟读句子</h4>
+                        <p class="target-sentence" id="targetSentence">Hello, how are you today?</p>
+                        <button class="btn btn-secondary" onclick="playSentence()">🔊 播放</button>
+                    </div>
+
+                    <div class="recording-section">
+                        <button class="btn-record" id="recordBtn" onclick="toggleRecording()">
+                            🎤 开始录音
+                        </button>
+                        <p id="recordingStatus">点击按钮开始录音</p>
+                    </div>
+
+                    <div class="feedback-section">
+                        <div id="speechFeedback" class="speech-feedback">
+                            <p>录音后这里会显示评分反馈</p>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            <!-- 复习页面 -->
+            <section id="review-page" class="page">
+                <div class="page-header">
+                    <h2>🔄 复习系统</h2>
+                    <div class="review-stats">
+                        <span>待复习: <strong id="reviewCount">0</strong> 词</span>
+                        <span class="review-tip">💡 每天复习记忆更牢固</span>
+                    </div>
+                </div>
+
+                <div class="review-modes">
+                    <button class="review-mode-btn active" data-mode="spaced" onclick="switchReviewMode('spaced')">
+                        智能复习
+                    </button>
+                    <button class="review-mode-btn" data-mode="all" onclick="switchReviewMode('all')">
+                        全部复习
+                    </button>
+                    <button class="review-mode-btn" data-mode="random" onclick="switchReviewMode('random')">
+                        随机测试
+                    </button>
+                </div>
+
+                <div id="review-card" class="review-card">
+                    <div class="card-front">
+                        <h3 id="reviewWord">加载中...</h3>
+                        <p id="reviewPhonetic"></p>
+                    </div>
+                    <div class="card-controls">
+                        <button class="btn btn-danger" onclick="showAnswer()">显示答案</button>
+                    </div>
+                    <div class="card-back hidden" id="cardBack">
+                        <p id="reviewMeaning"></p>
+                        <p id="reviewExample"></p>
+                        <div class="review-actions">
+                            <button class="btn btn-success" onclick="rateWord(1)">记得很清楚</button>
+                            <button class="btn btn-warning" onclick="rateWord(0)">有点模糊</button>
+                            <button class="btn btn-danger" onclick="rateWord(-1)">完全忘记</button>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="review-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="reviewProgress" style="width: 0%"></div>
+                    </div>
+                    <p id="reviewProgressText">0 / 0</p>
+                </div>
+            </section>
+
+            <!-- 语法页面 -->
+            <section id="grammar-page" class="page">
+                <div class="page-header">
+                    <h2>📝 基础语法</h2>
+                    <p class="grammar-intro">适合零基础的简单语法知识</p>
+                </div>
+
+                <div class="grammar-categories">
+                    <button class="grammar-category-btn active" onclick="showGrammarTopic('be')">be动词</button>
+                    <button class="grammar-category-btn" onclick="showGrammarTopic('pronouns')">代词</button>
+                    <button class="grammar-category-btn" onclick="showGrammarTopic('present')">现在时</button>
+                    <button class="grammar-category-btn" onclick="showGrammarTopic('questions')">疑问句</button>
+                    <button class="grammar-category-btn" onclick="showGrammarTopic('sentences')">基本句型</button>
+                </div>
+
+                <div id="grammar-content" class="grammar-content">
+                    <!-- 语法内容将通过JS动态生成 -->
+                </div>
+
+                <div class="grammar-exercises">
+                    <h3>📝 语法练习</h3>
+                    <div id="grammar-exercise" class="exercise-container">
+                        <!-- 练习题将通过JS动态生成 -->
+                    </div>
+                    <button class="btn btn-primary" onclick="checkGrammarAnswer()">检查答案</button>
+                    <div id="grammar-result" class="result-feedback"></div>
+                </div>
+            </section>
+
+            <!-- 统计页面 -->
+            <section id="stats-page" class="page">
+                <div class="page-header">
+                    <h2>📊 学习统计</h2>
+                    <select id="stats-period" class="period-select" onchange="loadStats()">
+                        <option value="week">本周</option>
+                        <option value="month">本月</option>
+                        <option value="all">全部</option>
+                    </select>
+                </div>
+
+                <div class="stats-overview">
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalWords">0</div>
+                        <div class="stat-label">已学词汇</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="totalHours">0</div>
+                        <div class="stat-label">学习时长(小时)</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="accuracy">0%</div>
+                        <div class="stat-label">平均准确率</div>
+                    </div>
+                    <div class="stat-item">
+                        <div class="stat-value" id="longestStreak">0</div>
+                        <div class="stat-label">最长连续(天)</div>
+                    </div>
+                </div>
+
+                <div class="achievements-section">
+                    <h3>🏆 成就徽章</h3>
+                    <div class="achievements-grid" id="achievementsGrid">
+                        <!-- 成就徽章将通过JS动态生成 -->
+                    </div>
+                </div>
+
+                <div class="learning-calendar">
+                    <h3>📅 学习日历</h3>
+                    <div class="calendar-grid" id="calendarGrid">
+                        <!-- 日历将通过JS动态生成 -->
+                    </div>
+                </div>
+            </section>
+        </main>
+
+        <!-- 移动端底部导航栏 -->
+        <nav class="mobile-nav" id="mobileNav">
+            <div class="mobile-nav-item active" data-page="home">
+                <span class="mobile-nav-icon">🏠</span>
+                <span>首页</span>
+            </div>
+            <div class="mobile-nav-item" data-page="vocabulary">
+                <span class="mobile-nav-icon">📖</span>
+                <span>词汇</span>
+            </div>
+            <div class="mobile-nav-item" data-page="listening">
+                <span class="mobile-nav-icon">🎧</span>
+                <span>听力</span>
+            </div>
+            <div class="mobile-nav-item" data-page="reading">
+                <span class="mobile-nav-icon">📝</span>
+                <span>阅读</span>
+            </div>
+            <div class="mobile-nav-item" data-page="speaking">
+                <span class="mobile-nav-icon">🗣️</span>
+                <span>口语</span>
+            </div>
+            <div class="mobile-nav-item" data-page="grammar">
+                <span class="mobile-nav-icon">📚</span>
+                <span>语法</span>
+            </div>
+            <div class="mobile-nav-item" data-page="stats">
+                <span class="mobile-nav-icon">📊</span>
+                <span>统计</span>
+            </div>
+        </nav>
+    </div>
+
+    <script src="app.js"></script>
+    <script>
+        // 测试函数是否加载
+        console.log('HTML script 执行');
+        console.log('toggleArticlePlay 函数是否存在:', typeof toggleArticlePlay);
+
+        // 注册Service Worker
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('./sw.js')
+                    .then(registration => {
+                        console.log('ServiceWorker registration successful');
+                    })
+                    .catch(error => {
+                        console.log('ServiceWorker registration failed:', error);
+                    });
+            });
+        }
+    </script>
+</body>
+</html>

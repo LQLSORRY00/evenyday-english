@@ -1,0 +1,28 @@
+<svg width="192" height="192" viewBox="0 0 192 192" xmlns="http://www.w3.org/2000/svg">
+  <!-- 背景圆形 -->
+  <circle cx="96" cy="96" r="96" fill="#4CAF50"/>
+  
+  <!-- 书本 -->
+  <rect x="48" y="70" width="96" height="70" rx="4" fill="#FFFFFF"/>
+  <rect x="50" y="72" width="45" height="66" fill="#F5F5F5"/>
+  <rect x="97" y="72" width="45" height="66" fill="#F5F5F5"/>
+  <line x1="96" y1="72" x2="96" y2="138" stroke="#4CAF50" stroke-width="2"/>
+  
+  <!-- 书本上的线条 -->
+  <line x1="56" y1="82" x2="86" y2="82" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
+  <line x1="56" y1="92" x2="86" y2="92" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
+  <line x1="56" y1="102" x2="86" y2="102" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
+  <line x1="56" y1="112" x2="80" y2="112" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
+  
+  <line x1="106" y1="82" x2="136" y2="82" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
+  <line x1="106" y1="92" x2="136" y2="92" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
+  <line x1="106" y1="102" x2="136" y2="102" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
+  <line x1="106" y1="112" x2="130" y2="112" stroke="#4CAF50" stroke-width="2" stroke-linecap="round"/>
+  
+  <!-- 语言气泡 -->
+  <circle cx="130" cy="50" r="30" fill="#FFFFFF"/>
+  <text x="130" y="58" font-family="Arial, sans-serif" font-size="24" font-weight="bold" text-anchor="middle" fill="#4CAF50">A</text>
+  
+  <!-- 气泡尾巴 -->
+  <path d="M115 70 L120 75 L125 70 Z" fill="#FFFFFF"/>
+</svg>
